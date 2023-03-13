@@ -5,7 +5,7 @@ import SudokuSolver from "./SudokuSolver";
 import SudokuGame from "./SudokuGame";
 
 const Sudoku = () => {
-    const [tab, setTab] = useState(0) // 0 for game, 1 for solver
+    const [tab, setTab] = useState(1) // 0 for game, 1 for solver
 
     return (
         <SudokuContextProvider>

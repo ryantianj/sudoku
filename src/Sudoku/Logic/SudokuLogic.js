@@ -1,3 +1,5 @@
+import {jsx} from "react/jsx-runtime";
+
 const SIZE = 9
 // Each state is represented by board, depth
 export const solveSudoku = function(board) {
@@ -176,62 +178,39 @@ export const checkSolution = (board, row, col) => {
     return checkRow.concat(checkCol).concat(checkBox)
 }
 
-const getRowDuplicates = (board, row, col) => {
+const getRowDuplicates = (board) => {
     let dups = []
-    const hashMap = {}
-    for (let i = 0; i < SIZE; i++) {
-        const current = board[row][i]
-        if (current !== ".") {
-            if (hashMap[current] !== undefined) {
-                const currentArray = hashMap[current]
-                currentArray.push(row + " " + i)
-            } else {
-                const newArray = []
-                newArray.push(row + " " + i)
-                hashMap[current] = newArray
+    for (let j = 0; j < SIZE; j++) {
+        const hashMap = {}
+        for (let i = 0; i < SIZE; i++) {
+            const current = board[j][i]
+            if (current !== ".") {
+                if (hashMap[current] !== undefined) {
+                    const currentArray = hashMap[current]
+                    currentArray.push(j + " " + i)
+                } else {
+                    const newArray = []
+                    newArray.push(j + " " + i)
+                    hashMap[current] = newArray
+                }
             }
         }
-    }
-    for (const key in hashMap) {
-        if (hashMap[key].length > 1) {
-            dups = dups.concat(hashMap[key])
+        for (const key in hashMap) {
+            if (hashMap[key].length > 1) {
+                dups = dups.concat(hashMap[key])
+            }
         }
     }
     return dups
 
 }
 
-const getColDuplicates = (board, row, col) => {
+const getColDuplicates = (board) => {
     let dups = []
-    const hashMap = {}
-    for (let i = 0; i < SIZE; i++) {
-        const current = board[i][col]
-        if (current !== ".") {
-            if (hashMap[current] !== undefined) {
-                const currentArray = hashMap[current]
-                currentArray.push(i + " " + col)
-            } else {
-                const newArray = []
-                newArray.push(i + " " + col)
-                hashMap[current] = newArray
-            }
-        }
-    }
-    for (const key in hashMap) {
-        if (hashMap[key].length > 1) {
-            dups = dups.concat(hashMap[key])
-        }
-    }
-    return dups
-}
 
-const getBoxDuplicates = (board, row, col) => {
-    let dups = []
-    const hashMap = {}
-    const colStart = Math.floor(col / 3) * 3
-    const rowStart = Math.floor(row / 3) * 3
-    for (let i = rowStart; i < rowStart + 3; i++) {
-        for (let j = colStart; j < colStart + 3; j++) {
+    for (let j = 0; j < SIZE; j++) {
+        const hashMap = {}
+        for (let i = 0; i < SIZE; i++) {
             const current = board[i][j]
             if (current !== ".") {
                 if (hashMap[current] !== undefined) {
@@ -244,12 +223,45 @@ const getBoxDuplicates = (board, row, col) => {
                 }
             }
         }
-    }
-    for (const key in hashMap) {
-        if (hashMap[key].length > 1) {
-            dups = dups.concat(hashMap[key])
+        for (const key in hashMap) {
+            if (hashMap[key].length > 1) {
+                dups = dups.concat(hashMap[key])
+            }
         }
     }
+    return dups
+}
+
+const getBoxDuplicates = (board, row, col) => {
+    let dups = []
+    for (let row = 0; row < SIZE; row+=3) {
+        for (col = 0; col < SIZE; col+=3) {
+            const hashMap = {}
+            const colStart = col
+            const rowStart = row
+            for (let i = rowStart; i < rowStart + 3; i++) {
+                for (let j = colStart; j < colStart + 3; j++) {
+                    const current = board[i][j]
+                    if (current !== ".") {
+                        if (hashMap[current] !== undefined) {
+                            const currentArray = hashMap[current]
+                            currentArray.push(i + " " + j)
+                        } else {
+                            const newArray = []
+                            newArray.push(i + " " + j)
+                            hashMap[current] = newArray
+                        }
+                    }
+                }
+            }
+            for (const key in hashMap) {
+                if (hashMap[key].length > 1) {
+                    dups = dups.concat(hashMap[key])
+                }
+            }
+        }
+    }
+
     return dups
 }
 

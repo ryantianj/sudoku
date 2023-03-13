@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import "./Sudoku.css"
 import SudokuBoard from "./SudokuBoard";
 import sudokuContext from "./SudokuContext";
@@ -7,11 +7,17 @@ import Button from "./Button";
 
 const SudokuSolver = () => {
     const TestComponent = () => {
+        const [isError, setIsError] = useState(false)
         const sudokuCtx = useContext(sudokuContext)
 
         const handleClick = () => {
             const solution = solveSudoku(sudokuCtx.board.getBoardString())
-            sudokuCtx.setFullBoard(solution)
+            if (solution === null) {
+                setIsError(true)
+            } else {
+                setIsError(false)
+                sudokuCtx.setFullBoard(solution)
+            }
         }
 
         const handleClear = () => {
@@ -20,6 +26,7 @@ const SudokuSolver = () => {
 
         return (
             <div>
+                {isError && <p>Invalid puzzle provided!</p>}
                 <Button onClick={handleClick}>
                     Solve
                 </Button>

@@ -27,6 +27,7 @@ const SudokuGame = () => {
         }
 
         const handleSolution = () => {
+            sudokuCtx.resetBoard()
             const solution = solveSudoku(sudokuCtx.board.getBoardString())
             sudokuCtx.setFullBoard(solution)
         }
