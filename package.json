@@ -9,7 +9,9 @@
     "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^4.7.4",
     "react-scripts": "5.0.1",
+    "tesseract.js": "^2.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

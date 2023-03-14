@@ -31,6 +31,7 @@ export const SudokuContextProvider = (props) => {
     }
 
     const setFullBoard = (boardString) => {
+        console.log(boardString)
         const newBoard = new Board(boardString)
         setBoardValue(newBoard)
     }
