@@ -19,7 +19,7 @@ const SudokuImage = ({setTab, setLoading}) => {
         const imageFile = event.target.files[0];
         const options = {
             maxSizeMB: 1,
-            maxWidthOrHeight: 700,
+            maxWidthOrHeight: 1000,
             useWebWorker: true,
         }
         try {
