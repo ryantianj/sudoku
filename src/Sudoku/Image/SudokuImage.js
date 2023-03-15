@@ -4,6 +4,7 @@ import Cropper from "react-easy-crop";
 import getCroppedImg from "./Logic/cropImage";
 import driver from "./Logic/scanImage";
 import SudokuContext from "../SudokuContext";
+import imageCompression from "browser-image-compression";
 
 const SudokuImage = ({setTab, setLoading}) => {
     const boardCtx = useContext(SudokuContext)
@@ -14,14 +15,31 @@ const SudokuImage = ({setTab, setLoading}) => {
     const [loading, isLoading] = useState(false)
     const [progress, setProgress] = useState(0)
 
-    const onSelectFile = (event) => {
-        if (event.target.files && event.target.files.length > 0) {
+    const onSelectFile = async (event) => {
+        const imageFile = event.target.files[0];
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 700,
+            useWebWorker: true,
+        }
+        try {
+            const compressedFile = await imageCompression(imageFile, options);
             const reader = new FileReader();
-            reader.readAsDataURL(event.target.files[0]);
+            reader.readAsDataURL(compressedFile);
             reader.addEventListener("load", () => {
                 setImage(reader.result);
             });
+            setImage(compressedFile)
+        } catch (error) {
+            alert("Error: " + error)
         }
+        // if (event.target.files && event.target.files.length > 0) {
+        //     const reader = new FileReader();
+        //     reader.readAsDataURL(event.target.files[0]);
+        //     reader.addEventListener("load", () => {
+        //         setImage(reader.result);
+        //     });
+        // }
     };
 
     const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
