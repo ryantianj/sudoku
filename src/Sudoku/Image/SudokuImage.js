@@ -42,7 +42,7 @@ const SudokuImage = ({setTab, setLoading}) => {
             boardCtx.clearBoard()
             boardCtx.setFullBoard(values, false)
         } catch (e) {
-            alert("Error processing Image!")
+            alert("Error processing Image!, " + e)
         } finally {
             isLoading(false)
             setLoading(false)

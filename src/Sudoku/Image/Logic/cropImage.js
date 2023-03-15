@@ -13,7 +13,7 @@ function getRadianAngle(degreeValue) {
 
 export default async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
     const image = await createImage(imageSrc);
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas", {width: 600, height:600});
     const ctx = canvas.getContext("2d");
 
     const maxSize = Math.max(image.width, image.height);
