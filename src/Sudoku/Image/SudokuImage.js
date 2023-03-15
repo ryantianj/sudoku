@@ -53,10 +53,13 @@ const SudokuImage = ({setTab, setLoading}) => {
         <div className="imageWrapper">
             <p>The better the crop, the better the results!</p>
             <input type="file" accept="image/*" onChange={onSelectFile}/>
+            <button onClick={handleClick} disabled={loading} className="imageButtons">
+                Done
+            </button>
+            {loading && <div>
+                <p style={{color: "black"}}>Processing Image {Math.round(progress * 100)}%</p>
+            </div>}
             <div className="cropperWrapper">
-                {loading && <div>
-                    <p style={{color: "black"}}>Processing Image {Math.round(progress * 100)}%</p>
-                </div>}
                 <Cropper
                     image={image}
                     zoom={zoom}
@@ -67,9 +70,6 @@ const SudokuImage = ({setTab, setLoading}) => {
                     onCropComplete={onCropComplete}
                 />
             </div>
-            <button onClick={handleClick} disabled={loading} className="imageButtons">
-                Done
-            </button>
         </div>
     )
 }

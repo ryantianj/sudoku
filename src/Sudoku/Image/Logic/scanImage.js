@@ -8,14 +8,15 @@ const driver = async (image, croppedAreaPixels, getProgress) => {
     const height = croppedAreaPixels.height / 9
 
     const rectangles = []
+    const error = 0.15
     for (let i = 0; i < 9; i++) {
         const row = []
         for (let j = 0; j < 9; j++) {
             row.push({
-                left: j * width + 0.1 * width,
-                top: i * height + 0.1 * height,
-                width: 0.9 * width,
-                height: 0.9 * height
+                left: j * width + error * width,
+                top: i * height + error* height,
+                width: (1- error) * width,
+                height: (1- error) * height
             })
         }
         rectangles.push(row)
@@ -25,6 +26,7 @@ const driver = async (image, croppedAreaPixels, getProgress) => {
         // TODO: make parallel
 
         // const start = performance.now();
+        const numWorkers = 2
 
         const worker = createWorker()
         await worker.load();
@@ -33,6 +35,7 @@ const driver = async (image, croppedAreaPixels, getProgress) => {
         await worker.setParameters({
             tessedit_char_whitelist: '123456789',
         });
+
         const values = []
         let count = 0
         for (let i = 0; i < 9; i++) {
@@ -46,8 +49,6 @@ const driver = async (image, croppedAreaPixels, getProgress) => {
             values.push(row)
         }
         await worker.terminate()
-        // const { data: { text } } = await worker.recognize(image);
-        // console.log(text)
         cleanValues(values)
         // const end = performance.now();
         // const duration = end - start;
