@@ -12,6 +12,7 @@ const SudokuImage = ({setTab, setLoading}) => {
     const [image, setImage] = useState(null)
     const [croppedArea, setCroppedArea] = React.useState(null);
     const [loading, isLoading] = useState(false)
+    const [progress, setProgress] = useState(0)
 
     const onSelectFile = (event) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -27,24 +28,35 @@ const SudokuImage = ({setTab, setLoading}) => {
         setCroppedArea(croppedAreaPixels);
     };
 
+    const getProgress = (progress) => {
+        setProgress(progress)
+    }
+
     const handleClick = async () => {
         setLoading(true)
         isLoading(true)
-        const croppedImage = await getCroppedImg(image, croppedArea)
-        const values = await driver(croppedImage, croppedArea)
-        // set board context here
-        setTab(1)
-        boardCtx.clearBoard()
-        boardCtx.setFullBoard(values, false)
-        isLoading(false)
-        setLoading(false)
+        try {
+            const croppedImage = await getCroppedImg(image, croppedArea)
+            const values = await driver(croppedImage, croppedArea, getProgress)
+            setTab(1)
+            boardCtx.clearBoard()
+            boardCtx.setFullBoard(values, false)
+        } catch (e) {
+            alert("Error processing Image!")
+        } finally {
+            isLoading(false)
+            setLoading(false)
+        }
     }
 
     return (
         <div className="imageWrapper">
+            <p>The better the crop, the better the results!</p>
             <input type="file" accept="image/*" onChange={onSelectFile}/>
             <div className="cropperWrapper">
-                {loading && <p>Processing Image...</p>}
+                {loading && <div>
+                    <p style={{color: "black"}}>Processing Image {Math.round(progress * 100)}%</p>
+                </div>}
                 <Cropper
                     image={image}
                     zoom={zoom}

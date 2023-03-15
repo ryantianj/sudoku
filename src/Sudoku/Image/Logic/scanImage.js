@@ -3,7 +3,7 @@ const { createWorker, createScheduler } = require('tesseract.js');
 
 
 
-const driver = async (image, croppedAreaPixels) => {
+const driver = async (image, croppedAreaPixels, getProgress) => {
     const width = croppedAreaPixels.width / 9
     const height = croppedAreaPixels.height / 9
 
@@ -21,10 +21,10 @@ const driver = async (image, croppedAreaPixels) => {
         rectangles.push(row)
     }
 
-    const doOCR = async () => {
+    const doOCR = async (getProgress) => {
         // TODO: make parallel
 
-        const start = performance.now();
+        // const start = performance.now();
 
         const worker = createWorker()
         await worker.load();
@@ -34,23 +34,27 @@ const driver = async (image, croppedAreaPixels) => {
             tessedit_char_whitelist: '123456789',
         });
         const values = []
+        let count = 0
         for (let i = 0; i < 9; i++) {
             const row = []
             for (let j = 0; j < 9; j++) {
                 const { data: { text } } = await worker.recognize(image, {rectangle: rectangles[i][j]});
+                count++
+                getProgress(count / 81)
                 row.push(text)
             }
             values.push(row)
         }
+        await worker.terminate()
         // const { data: { text } } = await worker.recognize(image);
         // console.log(text)
         cleanValues(values)
-        const end = performance.now();
-        const duration = end - start;
-        console.log("time", duration)
+        // const end = performance.now();
+        // const duration = end - start;
+        // console.log("time", duration)
         return values
     };
-    return await doOCR()
+    return await doOCR(getProgress)
 }
 
 const cleanValues = (array) => {
