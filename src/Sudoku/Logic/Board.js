@@ -6,7 +6,7 @@ class Board {
 
     #board
 
-    constructor(boardString = null) {
+    constructor(boardString = null, readOnly = true) {
         const board = new Array(Board.SIZE)
 
         for (let i = 0; i < Board.SIZE; i++) {
@@ -24,7 +24,7 @@ class Board {
                 for (let col = 0; col < Board.SIZE; col++) {
                     const current = boardString[row][col]
                     if (current !== Cell.EMPTY) {
-                        board[row][col] = new Cell(row, col, current, true)
+                        board[row][col] = new Cell(row, col, current, readOnly)
                     } else {
                         board[row][col] = new Cell(row, col, current, false)
                     }

@@ -5,7 +5,7 @@ import getCroppedImg from "./Logic/cropImage";
 import driver from "./Logic/scanImage";
 import SudokuContext from "../SudokuContext";
 
-const SudokuImage = ({setTab}) => {
+const SudokuImage = ({setTab, setLoading}) => {
     const boardCtx = useContext(SudokuContext)
     const [crop, setCrop] = useState({x:0, y:0})
     const [zoom, setZoom] = useState(1)
@@ -28,29 +28,23 @@ const SudokuImage = ({setTab}) => {
     };
 
     const handleClick = async () => {
+        setLoading(true)
         isLoading(true)
         const croppedImage = await getCroppedImg(image, croppedArea)
         const values = await driver(croppedImage, croppedArea)
-        console.log(values)
         // set board context here
-        boardCtx.setFullBoard(values)
-        isLoading(false)
         setTab(1)
+        boardCtx.clearBoard()
+        boardCtx.setFullBoard(values, false)
+        isLoading(false)
+        setLoading(false)
     }
-
-    const cleanResults = (array) => {
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-
-            }
-        }
-    }
-
 
     return (
         <div className="imageWrapper">
             <input type="file" accept="image/*" onChange={onSelectFile}/>
             <div className="cropperWrapper">
+                {loading && <p>Processing Image...</p>}
                 <Cropper
                     image={image}
                     zoom={zoom}
@@ -61,8 +55,8 @@ const SudokuImage = ({setTab}) => {
                     onCropComplete={onCropComplete}
                 />
             </div>
-            <button onClick={handleClick} disabled={loading}>
-                done
+            <button onClick={handleClick} disabled={loading} className="imageButtons">
+                Done
             </button>
         </div>
     )
