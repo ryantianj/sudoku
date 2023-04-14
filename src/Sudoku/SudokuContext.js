@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Board from "./Logic/Board";
-import {checkSolution} from "./Logic/SudokuLogic";
+import {checkSolution, isValidSudoku} from "./Logic/SudokuLogic";
 
 const SudokuContext = React.createContext({
     board: [],
@@ -9,6 +9,7 @@ const SudokuContext = React.createContext({
     clearBoard: () => {},
     resetBoard: () => {},
     update: false,
+    checkSolve: () => {}
 });
 export const SudokuContextProvider = (props) => {
     const [board, setBoardValue] = useState(new Board())
@@ -45,6 +46,10 @@ export const SudokuContextProvider = (props) => {
         setUpdate(prevState => !prevState)
     }
 
+    const checkSolve = () => {
+        return board.isAllFilled() && isValidSudoku(board.getBoardString())
+    }
+
     return (
         <SudokuContext.Provider value={{
             board: board,
@@ -52,7 +57,8 @@ export const SudokuContextProvider = (props) => {
             setFullBoard: setFullBoard,
             clearBoard: clearBoard,
             resetBoard: resetBoard,
-            update: update
+            update: update,
+            checkSolve: checkSolve
         }}>
             {props.children}
         </SudokuContext.Provider>

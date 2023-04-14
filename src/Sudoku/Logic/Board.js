@@ -90,6 +90,17 @@ class Board {
         }
     }
 
+    isAllFilled = () => {
+        for (let row = 0; row < Board.SIZE; row++) {
+            for (let col = 0; col < Board.SIZE; col++) {
+                if (this.#board[row][col].getValue() === Cell.EMPTY) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
 
 
 }

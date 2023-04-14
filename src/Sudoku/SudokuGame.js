@@ -44,6 +44,15 @@ const SudokuGame = () => {
             setDifficulty(e.target.value)
         }
 
+        const handleCheck = () => {
+            const isSolved = sudokuCtx.checkSolve()
+            if (isSolved) {
+                alert("Congratulations, solved")
+            } else {
+                alert("Puzzle not yet complete")
+            }
+        }
+
         return (
             <div className="sudokuWrapper">
                 <div className="sudokuGameBar">
@@ -53,6 +62,9 @@ const SudokuGame = () => {
                 </div>
                 <Button onClick={handleGenerate}>
                     Generate puzzle
+                </Button>
+                <Button onClick={handleCheck}>
+                    Check
                 </Button>
                 <Button onClick={handleSolution}>
                     Show Solution
