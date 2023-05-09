@@ -1,5 +1,3 @@
-import {jsx} from "react/jsx-runtime";
-
 const SIZE = 9
 // Each state is represented by board, depth
 export const solveSudoku = function(board) {
